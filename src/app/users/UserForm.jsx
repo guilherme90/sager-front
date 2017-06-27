@@ -27,16 +27,15 @@ class UserForm extends Component {
     super(props)
 
     this.state = {
-      user: {
-        loading: false,
-        data: {
-          name: null,
-          email: null,
-          userType: null,
-          active: null
-        }
-      },
+      loading: false,
+      loaded: false,
       submited: false,
+      data: {
+        name: '',
+        email: '',
+        userType: '',
+        active: ''
+      },
       validation: {}
     }    
   }
@@ -55,10 +54,9 @@ class UserForm extends Component {
       axiosRequest.get(`/users/${userId}`)
       .then(payload => {
         me.setState({
-          user: {
-            loading: false,
-            data: payload.data
-          }
+          loading: false,
+          loaded: true,
+          data: payload.data
         })
       })
       .catch(error => {
@@ -112,24 +110,26 @@ class UserForm extends Component {
     })
   }
 
-  onChangeValue = (e) => {
-    const newData = {}
-    newData[e.target.name] = e.target.value
+  onChangeValue = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
 
     this.setState({
-      user: {
-        data: newData
+      data: {
+        [name]: value
       }
     })
   }
 
   render() {
     const me = this.state
-    const user = me.user.data
+    const isLoaded = me.loaded
+    const user = me.data
     const validation = me.validation
 
     return (
-      <Panel header={titlePanel('Add Usuário')}>
+      <Panel header={titlePanel(isLoaded ? 'Editar Usuário' : 'Adicionar Usuário')}>
         <Form horizontal>
           <FormGroup validationState={validation.name && 'error'}>
             <Col sm={6} md={6}>
@@ -137,7 +137,7 @@ class UserForm extends Component {
               <FormControl 
                 type="text" 
                 name="name"
-                defaultValue={user && user.name}
+                value={user.name}
                 onChange={this.onChangeValue}
                 placeholder="Informe o nome do usuário" 
                 inputRef={input => { this.name = input; }} 
@@ -157,7 +157,7 @@ class UserForm extends Component {
               <FormControl 
                 componentClass="select" 
                 name="userType"
-                defaultValue={user && user.userType}
+                value={user.userType}
                 onChange={this.onChangeValue}
                 inputRef={input => { this.userType = input; }} 
                 disabled={me.submited}>
@@ -181,7 +181,7 @@ class UserForm extends Component {
               <FormControl 
                 type="email"
                 name="email"
-                defaultValue={user && user.email}
+                value={user.email}
                 onChange={this.onChangeValue}
                 placeholder="Informe um email válido" 
                 inputRef={input => { this.email = input; }} 
@@ -221,13 +221,13 @@ class UserForm extends Component {
           <FormGroup>
             <Col sm={6} md={6}>
               <Checkbox name="active" defaultChecked={user && user.active || true} value={user && user.active || true} inline>
-                {user && user.active && (
+                {isLoaded && user.active && (
                   <span>
                     Esse usuário está <strong className={user && user.active ? 'text-info' : 'text-danger'}>{user && user.active ? 'ATIVADO' : 'INATIVO'}</strong>
                   </span>
                 )}
 
-                {!user && (
+                {!user.active && (
                   <span>Por padrão, este novo usuário será salvo como <strong className="text-info">ATIVO</strong></span>
                 )}
               </Checkbox>
