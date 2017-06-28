@@ -14,7 +14,7 @@ import {
   FormControl,
   ControlLabel
 } from 'react-bootstrap'
-import axiosRequest from '../../http/axiosRequest'
+import UserService from './service/UserService'
 
 const titlePanel = (title) => (
   <h4>
@@ -46,22 +46,20 @@ class UserForm extends Component {
 
     if (userId) {
       me.setState({
-        user: {
-          loading: true
-        }
+        loading: true
       })
-
-      axiosRequest.get(`/users/${userId}`)
-      .then(payload => {
-        me.setState({
-          loading: false,
-          loaded: true,
-          data: payload.data
+      
+      UserService.findById(userId)
+        .then(payload => {
+          me.setState({
+            loading: false,
+            loaded: true,
+            data: payload.data
+          })
         })
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 
@@ -70,18 +68,19 @@ class UserForm extends Component {
 
     const me = this
     const userId = me.context.router.params.userId
+    const data = {
+      name: me.name.value,
+      email: me.email.value,
+      userType: me.userType.value,
+      password: me.password.value,
+      active: me.active.checked
+    }
 
     me.setState({
       submited: true
     })
 
-    if (userId) {
-      return axiosRequest.put(`/users/${userId}`, {
-        name: me.name.value,
-        email: me.email.value,
-        userType: me.userType.value,
-        password: me.password.value
-      })
+    return UserService.save(data, userId)
       .then(payload => {
         me.context.router.push('/users')
       })
@@ -91,23 +90,6 @@ class UserForm extends Component {
           validation: error.response.data
         })
       })
-    }
-
-    return axiosRequest.post('/users', {
-      name: me.name.value,
-      email: me.email.value,
-      userType: me.userType.value,
-      password: me.password.value
-    })
-    .then(payload => {
-      me.context.router.push('/users')
-    })
-    .catch(error => {
-      me.setState({
-        submited: false,
-        validation: error.response.data
-      })
-    })
   }
 
   onChangeValue = (event) => {
@@ -117,6 +99,7 @@ class UserForm extends Component {
 
     this.setState({
       data: {
+        ...this.state.data,
         [name]: value
       }
     })
@@ -134,10 +117,11 @@ class UserForm extends Component {
           <FormGroup validationState={validation.name && 'error'}>
             <Col sm={6} md={6}>
               <ControlLabel>Nome</ControlLabel>
+
               <FormControl 
                 type="text" 
                 name="name"
-                value={user.name}
+                value={user.name || ''}
                 onChange={this.onChangeValue}
                 placeholder="Informe o nome do usuário" 
                 inputRef={input => { this.name = input; }} 
@@ -157,14 +141,14 @@ class UserForm extends Component {
               <FormControl 
                 componentClass="select" 
                 name="userType"
-                value={user.userType}
+                value={user.userType || ''}
                 onChange={this.onChangeValue}
                 inputRef={input => { this.userType = input; }} 
                 disabled={me.submited}>
-                <option value=""></option>
-                <option value="Administrador">Administrador</option>
-                <option value="Administrativo">Administrativo</option>
-                <option value="Vendedor">Vendedor</option>
+                  <option value=""></option>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Administrativo">Administrativo</option>
+                  <option value="Vendedor">Vendedor</option>
               </FormControl>
 
               <FormControl.Feedback />
@@ -181,7 +165,7 @@ class UserForm extends Component {
               <FormControl 
                 type="email"
                 name="email"
-                value={user.email}
+                value={user.email || ''}
                 onChange={this.onChangeValue}
                 placeholder="Informe um email válido" 
                 inputRef={input => { this.email = input; }} 
@@ -220,17 +204,29 @@ class UserForm extends Component {
 
           <FormGroup>
             <Col sm={6} md={6}>
-              <Checkbox name="active" defaultChecked={user && user.active || true} value={user && user.active || true} inline>
-                {isLoaded && user.active && (
-                  <span>
-                    Esse usuário está <strong className={user && user.active ? 'text-info' : 'text-danger'}>{user && user.active ? 'ATIVADO' : 'INATIVO'}</strong>
-                  </span>
-                )}
+              {isLoaded && (
+                <Checkbox 
+                  name="active" 
+                  inputRef={input => { this.active = input; }} 
+                  onChange={this.onChangeValue} 
+                  checked={user.active} 
+                  inline>
+                    <span>
+                      Esse usuário está <strong className={user.active ? 'text-info' : 'text-danger'}>{user.active ? 'ATIVADO' : 'INATIVO'}</strong>
+                    </span>
+                </Checkbox>
+              )}
 
-                {!user.active && (
-                  <span>Por padrão, este novo usuário será salvo como <strong className="text-info">ATIVO</strong></span>
-                )}
-              </Checkbox>
+              {!isLoaded && (
+                <Checkbox 
+                  name="active" 
+                  inputRef={input => { this.active = input; }} 
+                  onChange={this.onChangeValue} 
+                  checked={true} value={true} 
+                  inline>
+                    <span>Por padrão, este novo usuário será salvo como <strong className="text-info">ATIVO</strong></span>
+                </Checkbox>
+              )}
             </Col>
           </FormGroup>
 
