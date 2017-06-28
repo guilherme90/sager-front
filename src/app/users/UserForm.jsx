@@ -127,7 +127,8 @@ class UserForm extends Component {
                 name="name"
                 value={user.name || ''}
                 onChange={this.onChangeValue}
-                placeholder="Informe o nome do usuário" 
+                placeholder="Informe o nome do usuário"
+                autoComplete="off"
                 inputRef={input => { this.name = input; }} 
                 disabled={me.submited} />
 
@@ -172,6 +173,7 @@ class UserForm extends Component {
                 value={user.email || ''}
                 onChange={this.onChangeValue}
                 placeholder="Informe um email válido" 
+                autoComplete="off"
                 inputRef={input => { this.email = input; }} 
                 disabled={me.submited} />
               
@@ -195,6 +197,7 @@ class UserForm extends Component {
                 name="password"
                 onChange={this.onChangeValue}
                 placeholder="Mínimo 6 caracteres" 
+                autoComplete="off"
                 inputRef={input => { this.password = input; }} 
                 disabled={me.submited} />
 
