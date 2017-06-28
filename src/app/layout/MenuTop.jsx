@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import React from 'react'
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -9,7 +13,7 @@ import {
 import FontAwesome from 'react-fontawesome'
 
 const MenuTop = () => (
-  <Navbar inverse>
+  <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
         <Link to="/">

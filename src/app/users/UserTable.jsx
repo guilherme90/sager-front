@@ -38,7 +38,7 @@ const UserTable = (props) => (
                 </Button>
               </LinkContainer>
 
-              <Button onClick={props.handleRemoveUser} bsStyle="danger">
+              <Button onClick={event => props.handleRemoveUser(event, index, user._id)} bsStyle="danger">
                 <FontAwesome name="trash" />
               </Button>
             </ButtonGroup>
@@ -48,7 +48,7 @@ const UserTable = (props) => (
               <Label bsStyle={user.active ? 'primary' : 'warning'}>{user.active ? 'Sim' : 'Não'}</Label>
             </h5>
           </td>
-          <td className="hidden-xs">Administrador</td>
+          <td className="hidden-xs">{user.userType}</td>
           <td>{user.name}</td>
           <td className="hidden-xs">{user.email}</td>
         </tr>
@@ -59,7 +59,8 @@ const UserTable = (props) => (
 
 UserTable.PropTypes = {
   users: PropTypes.array.isRequired,
-  handleRemoveUser: PropTypes.func.isRequired
+  handleRemoveUser: PropTypes.func.isRequired,
+  usersScreen: PropTypes.object.isRequired
 }
 
 export default UserTable

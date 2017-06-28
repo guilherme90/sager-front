@@ -27,9 +27,13 @@ const UserService = {
    * @return {Promise}
    */
   searchUsers(query) {
-    return api.get('/users', {
-      search: query
-    })
+    if (query) {
+      return api.get('/users', {
+        params: { search: query }
+      })
+    }
+
+    return this.findAllUsers()
   },
 
   /**
@@ -44,6 +48,15 @@ const UserService = {
     }
 
     return api.post('/users', data)
+  },
+
+  /**
+   * @param {String} userId 
+   * 
+   * @return {Promise}
+   */
+  remove(userId) {
+    return api.delete(`/users/${userId}`)
   }
 }
 

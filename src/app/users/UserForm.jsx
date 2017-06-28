@@ -107,8 +107,6 @@ class UserForm extends Component {
         [name]: value
       }
     })
-
-    console.log(this.state.data)
   }
 
   render() {
