@@ -5,8 +5,7 @@ import { AppContainer } from 'react-hot-loader'
 import routes from './routes'
 import RootRoutes from './app/RootRoutes'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/css/bootstrap-theme.min.css'
-//import 'bootswatch/lumen/bootstrap.min.css'
+import 'bootswatch/paper/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.min.css'
 
 const __DEV__ = process.env.NODE_ENV === 'development';

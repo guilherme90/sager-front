@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 const express = require('express')
 const path = require('path')
 const opn = require('opn')

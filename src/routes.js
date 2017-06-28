@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import React from 'react'
 import { Route, Router, IndexRoute, Redirect } from 'react-router'
 
@@ -16,8 +20,6 @@ const routes = () => {
         <Route path="users/add" component={UserForm}/>
         <Route path="users/edit/:userId" component={UserForm}/>
       </Router>
-
-      
     </Route>
   )
 }

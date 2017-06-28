@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import React, { Component, PropTypes } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -34,7 +38,7 @@ class UserForm extends Component {
         name: '',
         email: '',
         userType: '',
-        active: ''
+        active: true
       },
       validation: {}
     }    
@@ -103,6 +107,8 @@ class UserForm extends Component {
         [name]: value
       }
     })
+
+    console.log(this.state.data)
   }
 
   render() {
@@ -222,7 +228,7 @@ class UserForm extends Component {
                   name="active" 
                   inputRef={input => { this.active = input; }} 
                   onChange={this.onChangeValue} 
-                  checked={true} value={true} 
+                  checked={user.active}
                   inline>
                     <span>Por padrão, este novo usuário será salvo como <strong className="text-info">ATIVO</strong></span>
                 </Checkbox>

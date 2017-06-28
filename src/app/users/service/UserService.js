@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import api from '../../../http/axiosRequest'
 
 const UserService = {

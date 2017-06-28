@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import React, { PropTypes } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -40,9 +44,9 @@ const UserTable = (props) => (
             </ButtonGroup>
           </td>
           <td className="hidden-xs">
-            <h4>
+            <h5>
               <Label bsStyle={user.active ? 'primary' : 'warning'}>{user.active ? 'Sim' : 'Não'}</Label>
-            </h4>
+            </h5>
           </td>
           <td className="hidden-xs">Administrador</td>
           <td>{user.name}</td>
