@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import {
+  Row,
   Col,
   Alert,
   HelpBlock,
@@ -19,9 +20,10 @@ import {
   ControlLabel
 } from 'react-bootstrap'
 import AppTitle from '../components/AppTitle'
-import UserService from './service/UserService'
+import CustomerAddressesTable from './address/CustomerAddressesTable'
+import CustomerService from './service/CustomerService'
 
-class UserForm extends Component {
+class CustomerForm extends Component {
   constructor(props) {
     super(props)
 
@@ -32,8 +34,8 @@ class UserForm extends Component {
       data: {
         name: '',
         email: '',
-        userType: '',
-        active: true
+        telephone: '',
+        cellphone: ''
       },
       validation: {}
     }    
@@ -41,14 +43,14 @@ class UserForm extends Component {
 
   componentDidMount() {
     const me = this
-    const userId = me.context.router.params.userId
+    const customerId = me.context.router.params.customerId
 
-    if (userId) {
+    if (customerId) {
       me.setState({
         loading: true
       })
       
-      UserService.findById(userId)
+      CustomerService.findById(customerId)
         .then(payload => {
           me.setState({
             loading: false,
@@ -62,26 +64,28 @@ class UserForm extends Component {
     }
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
+  /**
+   * @param {SyntheticEvent} event
+   */
+  handleSubmit = (event) => {
+    event.preventDefault()
 
     const me = this
-    const userId = me.context.router.params.userId
+    const customerId = me.context.router.params.customerId
     const data = {
       name: me.name.value,
       email: me.email.value,
-      userType: me.userType.value,
-      password: me.password.value,
-      active: me.active.checked
+      telephone: me.telephone.value,
+      cellphone: me.cellphone.value
     }
 
     me.setState({
       submited: true
     })
 
-    return UserService.save(data, userId)
+    return CustomerService.save(data, customerId)
       .then(payload => {
-        me.context.router.push('/users')
+        me.context.router.push('/customers')
       })
       .catch(error => {
         me.setState({
@@ -91,9 +95,12 @@ class UserForm extends Component {
       })
   }
 
+  /**
+   * @param {SyntheticEvent} event
+   */
   onChangeValue = (event) => {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.value;
     const name = target.name;
 
     this.setState({
@@ -107,12 +114,12 @@ class UserForm extends Component {
   render() {
     const me = this.state
     const isLoaded = me.loaded
-    const user = me.data
+    const customer = me.data
     const validation = me.validation
 
     return (
-      <AppTitle title={isLoaded ? 'Editar Usuário' : 'Adicionar Usuário'}>
-        <Panel header={(<h4><FontAwesome name="plus" /> {isLoaded ? 'Editar Usuário' : 'Adicionar Usuário'}</h4>)}>
+      <AppTitle title={isLoaded ? 'Editar Cliente' : 'Adicionar Cliente'}>
+        <Panel header={(<h4><FontAwesome name="plus" /> {isLoaded ? 'Editar Cliente' : 'Adicionar Cliente'}</h4>)}>
           <Form horizontal>
             <FormGroup validationState={validation.name && 'error'}>
               <Col sm={6} md={6}>
@@ -121,9 +128,9 @@ class UserForm extends Component {
                 <FormControl 
                   type="text" 
                   name="name"
-                  value={user.name || ''}
+                  value={customer.name || ''}
                   onChange={this.onChangeValue}
-                  placeholder="Informe o nome do usuário"
+                  placeholder="Informe o nome do cliente"
                   autoComplete="off"
                   inputRef={input => { this.name = input; }} 
                   disabled={me.submited} />
@@ -140,37 +147,13 @@ class UserForm extends Component {
               </Col>
             </FormGroup>
 
-            <FormGroup validationState={validation.userType && 'error'}>
-              <Col sm={6} md={6}>
-                <ControlLabel>Tipo de Usuário</ControlLabel>
-                <FormControl 
-                  componentClass="select" 
-                  name="userType"
-                  value={user.userType || ''}
-                  onChange={this.onChangeValue}
-                  inputRef={input => { this.userType = input; }} 
-                  disabled={me.submited}>
-                    <option value=""></option>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Administrativo">Administrativo</option>
-                    <option value="Vendedor">Vendedor</option>
-                </FormControl>
-
-                <FormControl.Feedback />
-
-                {validation.userType && validation.userType.map((message, index) => (
-                  <HelpBlock key={index}><FontAwesome name="remove" /> {message}</HelpBlock>
-                ))}
-              </Col>
-            </FormGroup>
-
             <FormGroup validationState={validation.email && 'error'}>
               <Col sm={6} md={6}>
                 <ControlLabel>Email</ControlLabel>
                 <FormControl 
                   type="email"
                   name="email"
-                  value={user.email || ''}
+                  value={customer.email || ''}
                   onChange={this.onChangeValue}
                   placeholder="Informe um email válido" 
                   autoComplete="off"
@@ -188,57 +171,63 @@ class UserForm extends Component {
                 )}
               </Col>
             </FormGroup>
+            
+            <Row>
+              <Col xs={6} md={6} md={3}>
+                <FormGroup validationState={validation.telephone && 'error'}>
+                  <Col xs={12} sm={12} md={12}>
+                    <ControlLabel>Telefone</ControlLabel>
+                    <FormControl 
+                      type="tel" 
+                      name="telephone"
+                      value={customer.telephone || ''}
+                      onChange={this.onChangeValue}
+                      min="0"
+                      autoComplete="off"
+                      inputRef={input => { this.telephone = input; }} 
+                      disabled={me.submited} />
 
-            <FormGroup validationState={validation.password && 'error'}>
-              <Col sm={6} md={6}>
-                <ControlLabel>Senha</ControlLabel>
-                <FormControl 
-                  type="password" 
-                  name="password"
-                  onChange={this.onChangeValue}
-                  placeholder="Mínimo 6 caracteres" 
-                  autoComplete="off"
-                  inputRef={input => { this.password = input; }} 
-                  disabled={me.submited} />
+                    <HelpBlock>99 9999-9999</HelpBlock>
 
-                <FormControl.Feedback />
+                    <FormControl.Feedback />
 
-                {validation.password && validation.password.map((message, index) => (
-                  <HelpBlock key={index}><FontAwesome name="remove" /> {message}</HelpBlock>
-                ))}
+                    {validation.telephone && validation.telephone.map((message, index) => (
+                      <HelpBlock key={index}><FontAwesome name="remove" /> {message}</HelpBlock>
+                    ))}
+                  </Col>
+                </FormGroup>
               </Col>
-            </FormGroup>
 
-            <FormGroup>
-              <Col sm={6} md={6}>
-                {isLoaded && (
-                  <Checkbox 
-                    name="active" 
-                    inputRef={input => { this.active = input; }} 
-                    onChange={this.onChangeValue} 
-                    checked={user.active} 
-                    inline>
-                      <span>
-                        Esse usuário está <strong className={user.active ? 'text-info' : 'text-danger'}>{user.active ? 'ATIVADO' : 'INATIVO'}</strong>
-                      </span>
-                  </Checkbox>
-                )}
+              <Col xs={6} md={6} md={3}>
+                <FormGroup validationState={validation.cellphone && 'error'}>
+                  <Col xs={12} sm={12} md={12}>
+                    <ControlLabel>Celular</ControlLabel>
+                    <FormControl 
+                      type="tel" 
+                      name="cellphone"
+                      value={customer.cellphone || ''}
+                      onChange={this.onChangeValue}
+                      min="0"
+                      autoComplete="off"
+                      inputRef={input => { this.cellphone = input; }} 
+                      disabled={me.submited} />
 
-                {!isLoaded && (
-                  <Checkbox 
-                    name="active" 
-                    inputRef={input => { this.active = input; }} 
-                    onChange={this.onChangeValue} 
-                    checked={user.active}
-                    inline>
-                      <span>Por padrão, este novo usuário será salvo como <strong className="text-info">ATIVO</strong></span>
-                  </Checkbox>
-                )}
+                    <HelpBlock>99 9999-9999</HelpBlock>
+
+                    <FormControl.Feedback />
+
+                    {validation.cellphone && validation.cellphone.map((message, index) => (
+                      <HelpBlock key={index}><FontAwesome name="remove" /> {message}</HelpBlock>
+                    ))}
+                  </Col>
+                </FormGroup>
               </Col>
-            </FormGroup>
+            </Row>
+
+            {isLoaded && <CustomerAddressesTable addresses={customer.addresses} />}
 
             <ButtonGroup>
-              <LinkContainer to="/users">
+              <LinkContainer to="/customers">
                 <Button bsStyle="success" disabled={me.submited}>
                   <FontAwesome name="reply" /> Voltar
                 </Button>
@@ -255,8 +244,8 @@ class UserForm extends Component {
   }
 }
 
-UserForm.contextTypes = {
+CustomerForm.contextTypes = {
   router: PropTypes.object.isRequired
 }
 
-export default UserForm
+export default CustomerForm

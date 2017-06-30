@@ -10,6 +10,9 @@ import Home from './app/components/Home'
 import UsersScreen from './app/users/UsersScreen'
 import UserForm from './app/users/UserForm'
 
+import CustomersScreen from './app/customers/CustomersScreen'
+import CustomerForm from './app/customers/CustomerForm'
+
 const routes = () => {
   return (
     <Route path="/" component={Dashboard}>
@@ -19,6 +22,10 @@ const routes = () => {
         <Route path="users" component={UsersScreen}/>
         <Route path="users/add" component={UserForm}/>
         <Route path="users/edit/:userId" component={UserForm}/>
+
+        <Route path="customers" component={CustomersScreen}/>
+        <Route path="customers/add" component={CustomerForm}/>
+        <Route path="customers/edit/:customerId" component={CustomerForm}/>
       </Router>
     </Route>
   )

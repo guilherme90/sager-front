@@ -24,10 +24,10 @@ import Loader from 'react-loader'
 import _ from 'lodash'
 import SweetAlert from '../../util/SweetAlert'
 import AppTitle from '../components/AppTitle'
-import UserTable from './UserTable'
-import UserService from './service/UserService'
+import CustomerTable from './CustomerTable'
+import CustomerService from './service/CustomerService'
 
-class UsersScreen extends Component {
+class CustomersScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -40,7 +40,7 @@ class UsersScreen extends Component {
   componentDidMount() {
     const me = this
 
-    UserService.findAllUsers()
+    CustomerService.findAllCustomers()
       .then(response => {
         me.setState({
           loaded: true,
@@ -56,18 +56,18 @@ class UsersScreen extends Component {
 
   /**
    * @param {SyntheticEvent} event
-   * @param {String} userId
+   * @param {String} customerId
    */
-  handleRemoveUser(event, index, userId) {
+  handleRemoveCustomer(event, index, customerId) {
     const me = this
-    const usersScreen = me.usersScreen
+    const customersScreen = me.customersScreen
 
     SweetAlert
       .confirm('Deseja remover esse registro?')
       .then(() => {
-        UserService.remove(userId)
+        CustomerService.remove(customerId)
           .then(response => {
-            usersScreen.setState(prevState => ({
+            customersScreen.setState(prevState => ({
               data: update(prevState.data, {$splice: [[index, 1]]})
             }))
           })
@@ -80,14 +80,14 @@ class UsersScreen extends Component {
   /**
    * @param {Object|SyntheticEvent} e
    */
-  _searchUser(e) {
+  _searchCustomers(e) {
     const me = this
 
     me.setState({
       loaded: false
     })
 
-    UserService.searchUsers(me.search.value)
+    CustomerService.searchCustomers(me.search.value)
       .then(response => {
         me.setState({
           loaded: true,
@@ -103,34 +103,34 @@ class UsersScreen extends Component {
       })
   }
 
-  handleSearchUser = _.debounce(e => this._searchUser(e), 300)
+  handleSearchCustomer = _.debounce(e => this._searchCustomers(e), 300)
 
   render() {
     const me = this.state
 
     return (
-      <AppTitle title="Usuários">
-        <Panel header={(<h4><FontAwesome name="users" /> Usuários</h4>)}>
+      <AppTitle title="Clientes">
+        <Panel header={(<h4><FontAwesome name="universal-access" /> Clientes</h4>)}>
           <Row>
             <Col xs={12} sm={12} md={4} lg={4}>
-              <LinkContainer to="/users/add">
+              <LinkContainer to="/customers/add">
                 <Button bsStyle="success">
-                  <FontAwesome name="plus" /> Adicionar Usuário
+                  <FontAwesome name="plus" /> Adicionar Cliente
                 </Button>
               </LinkContainer>
             </Col>
 
             <Col xs={12} sm={12} md={10} lg={8}>
-              <Form horizontal onSubmit={this.handleSearchUser}>
+              <Form horizontal onSubmit={this.handleSearchCustomer}>
                   <FormGroup>
                     <Col xs={12} sm={12} md={6} lg={6} className="pull-right">
                       <FormControl 
                         type="text" 
                         name="search"
-                        onChange={this.handleSearchUser}
+                        onChange={this.handleSearchCustomer}
                         inputRef={input => { this.search = input; }}
                         autoComplete="off"
-                        placeholder="Pesquisar usuário..." />
+                        placeholder="Pesquisar cliente..." />
                     </Col>
                   </FormGroup>
                 </Form>
@@ -138,11 +138,11 @@ class UsersScreen extends Component {
           </Row>
           
           <Loader loaded={me.loaded}>
-            {me.data.length > 0 && <UserTable users={me.data} handleRemoveUser={this.handleRemoveUser} usersScreen={this} />}
+            {me.data.length > 0 && <CustomerTable customers={me.data} handleRemoveCustomer={this.handleRemoveCustomer} customersScreen={this} />}
 
             {me.data.length === 0 && (
               <Alert bsStyle="warning">
-                <FontAwesome name="info-circle" /> Não encontramos nenhum usuário cadastrado.
+                <FontAwesome name="info-circle" /> Não encontramos nenhum cliente cadastrado.
               </Alert>
             )}
           </Loader>
@@ -152,4 +152,4 @@ class UsersScreen extends Component {
   }
 }
 
-export default UsersScreen
+export default CustomersScreen

@@ -13,54 +13,50 @@ import {
 } from 'react-bootstrap'
 
 /**
- * @param {Object} users 
+ * @param {Object} customers 
  */
-const UserTable = (props) => (
+const CustomerTable = (props) => (
   <Table responsive hover>
     <thead>
       <tr>
         <th>#</th>
-        <th className="hidden-xs">Ativo</th>
-        <th className="hidden-xs">Tipo</th>
         <th>Nome</th>
         <th className="hidden-xs">E-mail</th>
+        <th className="hidden-xs">Telefone</th>
+        <th className="hidden-xs">Celular</th>
       </tr>
     </thead>
 
     <tbody>
-      {props.users.map((user, index) => (
+      {props.customers.map((customer, index) => (
         <tr key={index}>
           <td>
             <ButtonGroup>
-              <LinkContainer to={`/users/edit/${user._id}`}>
+              <LinkContainer to={`/customers/edit/${customer._id}`}>
                 <Button bsStyle="info">
                   <FontAwesome name="pencil" />
                 </Button>
               </LinkContainer>
 
-              <Button onClick={event => props.handleRemoveUser(event, index, user._id)} bsStyle="danger">
+              <Button onClick={event => props.handleRemoveCustomer(event, index, customer._id)} bsStyle="danger">
                 <FontAwesome name="trash" />
               </Button>
             </ButtonGroup>
           </td>
-          <td className="hidden-xs">
-            <h5>
-              <Label bsStyle={user.active ? 'primary' : 'warning'}>{user.active ? 'Sim' : 'Não'}</Label>
-            </h5>
-          </td>
-          <td className="hidden-xs">{user.userType}</td>
-          <td>{user.name}</td>
-          <td className="hidden-xs">{user.email}</td>
+          <td>{customer.name}</td>
+          <td className="hidden-xs">{customer.email}</td>
+          <td className="hidden-xs">{customer.telephone}</td>
+          <td className="hidden-xs">{customer.cellphone}</td>
         </tr>
       ))}
     </tbody>
   </Table>
 )
 
-UserTable.PropTypes = {
+CustomerTable.PropTypes = {
   users: PropTypes.array.isRequired,
-  handleRemoveUser: PropTypes.func.isRequired,
-  usersScreen: PropTypes.object.isRequired
+  handleRemoveCustomer: PropTypes.func.isRequired,
+  customersScreen: PropTypes.object.isRequired
 }
 
-export default UserTable
+export default CustomerTable

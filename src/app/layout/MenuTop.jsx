@@ -23,9 +23,15 @@ const MenuTop = () => (
     </Navbar.Header>
 
     <Nav>
-      <LinkContainer to="users">
+      <LinkContainer to="/users">
         <NavItem eventKey={1}>
           <FontAwesome name="users" /> Usuários
+        </NavItem>
+      </LinkContainer>
+
+      <LinkContainer to="/customers">
+        <NavItem eventKey={1}>
+          <FontAwesome name="universal-access" /> Clientes
         </NavItem>
       </LinkContainer>
     </Nav>

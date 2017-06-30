@@ -4,7 +4,7 @@
 
 import api from '../../../http/axiosRequest'
 
-const UserService = {
+export default {
   /**
    * @return Promise
    */
@@ -59,5 +59,3 @@ const UserService = {
     return api.delete(`/users/${userId}`)
   }
 }
-
-export default UserService
