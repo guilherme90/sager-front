@@ -16,7 +16,7 @@ import {
   FormGroup,
   FormControl,
 } from 'react-bootstrap'
-import Modal from '../../components/Modal'
+import AddressModal from './AddressModal'
 import CustomerAddressesService from './service/CustomerAddressesService'
 
 class CustomerAddressesTable extends Component {
@@ -33,7 +33,9 @@ class CustomerAddressesTable extends Component {
   }
 
   openModal = (e) => {
-    this.setState({ showModal: true });
+    this.setState({ 
+      showModal: true
+    });
   }
 
   render() {
@@ -66,12 +68,10 @@ class CustomerAddressesTable extends Component {
               <tr key={index}>
                 <td>
                   <ButtonGroup>
+                    <Button bsStyle="info">
+                      <FontAwesome name="pencil" />
+                    </Button>
                     
-                      <Button bsStyle="info">
-                        <FontAwesome name="pencil" />
-                      </Button>
-                    
-
                     <Button bsStyle="danger">
                       <FontAwesome name="trash" />
                     </Button>
@@ -83,16 +83,19 @@ class CustomerAddressesTable extends Component {
           </tbody>
         </Table>
         
-        <Modal title="Test" isOpened={this.state.showModal} close={this.closeModal}>
-          Body here...
-        </Modal>
+        <AddressModal 
+          title="Formulário de Endereço" 
+          isOpened={this.state.showModal} 
+          closeModal={this.closeModal}
+          customerId={this.props.customerId} />
       </Panel>
     )
   }
 }
 
 CustomerAddressesTable.PropTypes = {
-  addresses: PropTypes.array.isRequired
+  addresses: PropTypes.array.isRequired,
+  customerId: PropTypes.array.isRequired
 }
 
 export default CustomerAddressesTable

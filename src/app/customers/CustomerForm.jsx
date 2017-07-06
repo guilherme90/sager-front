@@ -224,7 +224,7 @@ class CustomerForm extends Component {
               </Col>
             </Row>
 
-            {isLoaded && <CustomerAddressesTable addresses={customer.addresses} />}
+            {isLoaded && <CustomerAddressesTable addresses={customer.addresses} customerId={customer._id} />}
 
             <ButtonGroup>
               <LinkContainer to="/customers">
