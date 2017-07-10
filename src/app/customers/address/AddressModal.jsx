@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react'
-import update from 'react-addons-update';
 import FontAwesome from 'react-fontawesome'
 import { 
   Row,
@@ -142,6 +141,18 @@ class AddressModal extends Component {
 
     return CustomerAddressesService.save(data, customerId)
       .then(payload => {
+        me.setState({
+          submited: false,
+          data: {
+            city: '',
+            stateId: '',
+            address: '',
+            neighborhood: '',
+            number: '',
+            complement: ''
+          }
+        })
+
         me.props.addresses.push(data)
         me.props.closeModal()
       })

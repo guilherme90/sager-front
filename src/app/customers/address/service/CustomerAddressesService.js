@@ -37,7 +37,8 @@ export default {
 
   /**
    * @param {Object} data 
-   * @param {String|null|undefined} userId 
+   * @param {String} customerId
+   * @param {String|null|undefined} addressId 
    * 
    * @return {Promise}
    */
@@ -48,4 +49,14 @@ export default {
 
     return api.post(`/customers/${customerId}/addresses`, data)
   },
+
+  /**
+   * @param {String} customerId
+   * @param {String} addressId 
+   * 
+   * @return {Promise}
+   */
+  remove(customerId, addressId) {
+    return api.delete(`/customers/${customerId}/addresses/${addressId}`)
+  }
 }

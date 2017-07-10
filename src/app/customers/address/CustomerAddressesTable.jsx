@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
+import update from 'react-addons-update';
 import { LinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome'
 import { 
@@ -16,6 +17,7 @@ import {
   FormGroup,
   FormControl,
 } from 'react-bootstrap'
+import SweetAlert from '../../../util/SweetAlert'
 import AddressModal from './AddressModal'
 import CustomerAddressesService from './service/CustomerAddressesService'
 
@@ -36,6 +38,33 @@ class CustomerAddressesTable extends Component {
     this.setState({ 
       showModal: true
     });
+  }
+
+  /**
+   * @param {SyntheticEvent} event
+   * @param {String} userId
+   */
+  handleRemoveAddress(event, index, addressId) {
+    const me = this
+    const customerForm = me.props.customerForm
+
+    SweetAlert
+      .confirm('Deseja remover esse registro?')
+      .then(() => {
+        CustomerAddressesService.remove(me.props.customerId, addressId)
+          .then(response => {
+            customerForm.setState(prevState => ({
+              data: {
+                ...prevState.data,
+                addresses: update(prevState.data.addresses, {$splice: [[index, 1]]})
+              }
+            }))
+          })
+          .catch(error => {
+            console.log(error)
+            SweetAlert.error('Ocorreu um erro durante a exclusão do registro.')
+          })
+      })
   }
 
   render() {
@@ -72,7 +101,7 @@ class CustomerAddressesTable extends Component {
                       <FontAwesome name="pencil" />
                     </Button>
                     
-                    <Button bsStyle="danger">
+                    <Button bsStyle="danger" onClick={event => this.handleRemoveAddress(event, index, address._id)}>
                       <FontAwesome name="trash" />
                     </Button>
                   </ButtonGroup>
@@ -95,6 +124,7 @@ class CustomerAddressesTable extends Component {
 }
 
 CustomerAddressesTable.PropTypes = {
+  customerForm: PropTypes.object.isRequired,
   addresses: PropTypes.array.isRequired,
   customerId: PropTypes.array.isRequired
 }

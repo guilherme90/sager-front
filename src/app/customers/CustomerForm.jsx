@@ -35,7 +35,8 @@ class CustomerForm extends Component {
         name: '',
         email: '',
         telephone: '',
-        cellphone: ''
+        cellphone: '',
+        addresses: []
       },
       validation: {}
     }    
@@ -224,7 +225,7 @@ class CustomerForm extends Component {
               </Col>
             </Row>
 
-            {isLoaded && <CustomerAddressesTable addresses={customer.addresses} customerId={customer._id} />}
+            {isLoaded && <CustomerAddressesTable addresses={customer.addresses} customerId={customer._id} customerForm={this} />}
 
             <ButtonGroup>
               <LinkContainer to="/customers">
