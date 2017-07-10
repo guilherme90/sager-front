@@ -77,7 +77,7 @@ class CustomerAddressesTable extends Component {
                     </Button>
                   </ButtonGroup>
                 </td>
-                <td>{`${address.address}, ${address.number}, ${address.neighborhood}, ${address.complement} - ${address.city}/${address.state}`}</td>
+                <td>{`${address.address}, ${address.number}, ${address.neighborhood}, ${address.complement} - ${address.city}/${address.state.name}`}</td>
               </tr>
             ))}
           </tbody>
@@ -85,6 +85,7 @@ class CustomerAddressesTable extends Component {
         
         <AddressModal 
           title="Formulário de Endereço" 
+          addresses={addresses}
           isOpened={this.state.showModal} 
           closeModal={this.closeModal}
           customerId={this.props.customerId} />

@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
+import update from 'react-addons-update';
 import FontAwesome from 'react-fontawesome'
 import { 
   Row,
@@ -30,8 +31,8 @@ class AddressModal extends Component {
       loaded: false,
       submited: false,
       data: {
-        city: 'VICOSA',
-        stateName: 'MG',
+        city: '',
+        stateId: '',
         address: '',
         neighborhood: '',
         number: '',
@@ -81,29 +82,74 @@ class AddressModal extends Component {
     })
   }
 
+  /**
+   * @param {Array} selected
+   */
+  onChangeTypeahead = (selected) => {
+    const city = selected[0]
+    
+    this.setState({
+      data: {
+        ...this.state.data,
+        city: city ? city.nome : ''
+      }
+    })
+  }
+
   _handleSearchCities(query) {
     const me = this
-    const stateInitials = me.stateName.value
-    const customerId = me.props.customerId
+    const stateId = me.stateInput.value
     
-    CustomerAddressesService.searchCities(stateInitials, query)
+    CustomerAddressesService.searchCities(stateId, query)
       .then(payload => {
-        const data = []
-
-        payload.data[0].cidades.map(city => data.push({
-          id: city.codigo_ibje, 
-          label: city.nome_municipio
-        }))
-
         me.setState({
           cities: {
             loaded: true,
-            data: data
+            data: payload.data
           }
         })
       })
       .catch(error => {
 
+      })
+  }
+
+  /**
+   * @param {SyntheticEvent} event
+   */
+  handleSubmit = (event) => {
+    event.preventDefault()
+
+    const me = this
+    
+    const stateOptions = me.stateInput.options
+    const customerId = me.props.customerId
+    const data = {
+      address: me.address.value.toUpperCase(),
+      neighborhood: me.neighborhood.value.toUpperCase(),
+      number: me.number.value.toUpperCase(),
+      complement: me.complement.value.toUpperCase(),
+      state: {
+        name: stateOptions[stateOptions.selectedIndex].text.toUpperCase(),
+        id: stateOptions[stateOptions.selectedIndex].value.toUpperCase()
+      },
+      city: me.state.data.city.toUpperCase()
+    }
+
+    me.setState({
+      submited: true
+    })
+
+    return CustomerAddressesService.save(data, customerId)
+      .then(payload => {
+        me.props.addresses.push(data)
+        me.props.closeModal()
+      })
+      .catch(error => {
+        me.setState({
+          submited: false,
+          validation: error.response.data
+        })
       })
   }
 
@@ -130,13 +176,13 @@ class AddressModal extends Component {
                     <ControlLabel>Estado</ControlLabel>
                     <FormControl 
                       componentClass="select" 
-                      name="stateName"
-                      value={address.stateName || ''}
+                      name="stateId"
+                      value={address.stateId || ''}
                       onChange={this.onChangeValue}
-                      inputRef={input => { this.stateName = input; }} 
+                      inputRef={input => { this.stateInput = input; }} 
                       disabled={!me.states.loaded || me.submited}>
                         {!me.states.loaded && <option value>Carregando...</option>}
-                        {me.states.loaded  && me.states.data.map(state => <option value={state.sigla_uf} key={state._id}>{state.nome_uf}</option>)}
+                        {me.states.loaded  && me.states.data.map(state => <option value={state.uf} key={state._id}>{state.nome_uf}</option>)}
                     </FormControl>
 
                     <FormControl.Feedback />
@@ -152,15 +198,25 @@ class AddressModal extends Component {
                 <FormGroup validationState={validation.city && 'error'}>
                   <Col xs={12} md={12} md={12} lg={12}>
                     <ControlLabel>Cidade</ControlLabel>
-                    <AsyncTypeahead 
+                    <AsyncTypeahead
+                      name="city"
+                      ref="city"
+                      onChange={selected => this.onChangeTypeahead(selected)}
                       placeholder="Digite o nome da cidade..."
                       ignoreDiacritics={false}
                       onSearch={(query) => this._handleSearchCities(query)}
-                      options={this.state.cities.data} />
+                      labelKey={option => option.nome}
+                      options={this.state.cities.data}
+                      filterBy={['nome']}
+                      searchText="Buscando..."
+                      emptyLabel="Nenhum registro encontrado"
+                      promptText="Digite o nome da cidade..."
+                      paginationText="Exibir mais resultados..."
+                      delay={300} />
 
                     <FormControl.Feedback />
 
-                    {validation.state && validation.state.map((message, index) => (
+                    {validation.city && validation.city.map((message, index) => (
                       <HelpBlock key={index}><FontAwesome name="remove" /> {message}</HelpBlock>
                     ))}
                   </Col>

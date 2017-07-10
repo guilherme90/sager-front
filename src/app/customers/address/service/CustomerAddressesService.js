@@ -33,5 +33,19 @@ export default {
     }
 
     return false
-  }
+  },
+
+  /**
+   * @param {Object} data 
+   * @param {String|null|undefined} userId 
+   * 
+   * @return {Promise}
+   */
+  save(data, customerId, addressId) {
+    if (addressId) {
+      return api.put(`/customers/${customerId}/addresses/${addressId}`, data)
+    }
+
+    return api.post(`/customers/${customerId}/addresses`, data)
+  },
 }
