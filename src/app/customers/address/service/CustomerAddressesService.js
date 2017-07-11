@@ -20,6 +20,16 @@ export default {
   },
 
   /**
+   * @param {String} customerId
+   * @param {String} addressId 
+   * 
+   * @return {Promise}
+   */
+  findById(customerId, addressId) {
+    return api.get(`/customers/${customerId}/addresses/${addressId}`)
+  },
+
+  /**
    * @param {String} stateInitials 
    * @param {String} query 
    * 

@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react'
+import update from 'react-addons-update';
 import FontAwesome from 'react-fontawesome'
 import { 
   Row,
@@ -29,7 +30,7 @@ class AddressModal extends Component {
       loading: false,
       loaded: false,
       submited: false,
-      data: {
+      data: {  
         city: '',
         stateId: '',
         address: '',
@@ -50,22 +51,45 @@ class AddressModal extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     const me = this
 
     if (me.props.isOpened && me.state.states.data.length === 0) {
       CustomerAddressesService.findAllStates()
-      .then(payload => {
-        me.setState({
-          states: {
-            loaded: true,
-            data: payload.data
-          }
+        .then(payload => {
+          me.setState({
+            states: {
+              loaded: true,
+              data: payload.data
+            }
+          })
         })
-      })
-      .catch(error => {
+        .catch(error => {
 
-      })
+        })
+    }
+
+    if (me.props.isOpened && !me.state.loaded && me.props.addressId) {
+      CustomerAddressesService.findById(me.props.customerId, me.props.addressId)
+        .then(payload => {
+          const address = payload.data.addresses[0]
+
+          me.setState({
+            data: {
+              loading: false,
+              loaded: true,
+              city: address.city,
+              stateId: address.state.id,
+              address: address.address,
+              neighborhood: address.neighborhood,
+              number: address.number,
+              complement: address.complement
+            }
+          })
+        })
+        .catch(error => {
+
+        })
     }
   }
 
@@ -95,6 +119,9 @@ class AddressModal extends Component {
     })
   }
 
+  /**
+   * @param {String} query 
+   */
   _handleSearchCities(query) {
     const me = this
     const stateId = me.stateInput.value
@@ -139,21 +166,22 @@ class AddressModal extends Component {
       submited: true
     })
 
-    return CustomerAddressesService.save(data, customerId)
+    return CustomerAddressesService.save(data, customerId, me.props.addressId)
       .then(payload => {
         me.setState({
-          submited: false,
-          data: {
-            city: '',
-            stateId: '',
-            address: '',
-            neighborhood: '',
-            number: '',
-            complement: ''
-          }
+          submited: false
         })
 
-        me.props.addresses.push(data)
+        const lastIndex = payload.data.addresses[payload.data.addresses.length - 1]
+
+        if (!me.props.addressId) {
+          me.props.addresses.push(lastIndex)
+        }
+        
+        if (me.props.addressId) {
+          me.props.addresses[me.props.selected] = payload.data.addresses[me.props.selected]
+        }
+
         me.props.closeModal()
       })
       .catch(error => {
@@ -167,10 +195,8 @@ class AddressModal extends Component {
   render() {
     const me = this.state
     const props = this.props
-    const isLoaded = me.loaded
     const address = me.data
     const validation = me.validation
-    const disableFieldset = me.stateName && me.city ? false : true
 
     return (
       <Modal show={props.isOpened} onHide={props.close} backdrop="static">
@@ -212,6 +238,7 @@ class AddressModal extends Component {
                     <AsyncTypeahead
                       name="city"
                       ref="city"
+                      selected={[address.city || '']}
                       onChange={selected => this.onChangeTypeahead(selected)}
                       placeholder="Digite o nome da cidade..."
                       ignoreDiacritics={false}
@@ -223,7 +250,8 @@ class AddressModal extends Component {
                       emptyLabel="Nenhum registro encontrado"
                       promptText="Digite o nome da cidade..."
                       paginationText="Exibir mais resultados..."
-                      delay={300} />
+                      delay={300} 
+                      useCache={false} />
 
                     <FormControl.Feedback />
 
@@ -346,7 +374,9 @@ class AddressModal extends Component {
 }
 
 AddressModal.PropTypes = {
+  addressId: PropTypes.string,
   customerId: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   isOpened: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,

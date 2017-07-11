@@ -26,18 +26,40 @@ class CustomerAddressesTable extends Component {
     super(props)
 
     this.state = {
-      showModal: false
+      showModal: false,
+      addressId: null,
+      selected: null
     }
   }
 
   closeModal = (e) => {
-    this.setState({ showModal: false });
+    this.setState({ 
+      showModal: false 
+    });
   }
 
-  openModal = (e) => {
+  openModal(e, addressId, index) {
     this.setState({ 
-      showModal: true
+      showModal: true,
+      addressId: addressId,
+      selected: index
     });
+  }
+
+  renderModal() {
+    const addressId = this.state.addressId
+    const addresses = this.props.addresses
+
+    return (
+      <AddressModal 
+          title={addressId ? 'Editar Endereço' : 'Adicionar Endereço'}
+          addressId={addressId}
+          addresses={addresses}
+          selected={this.state.selected}
+          isOpened={this.state.showModal} 
+          closeModal={this.closeModal}
+          customerId={this.props.customerId} />
+    )
   }
 
   /**
@@ -61,13 +83,13 @@ class CustomerAddressesTable extends Component {
             }))
           })
           .catch(error => {
-            console.log(error)
             SweetAlert.error('Ocorreu um erro durante a exclusão do registro.')
           })
       })
   }
 
   render() {
+    const addressId = this.state.addressId
     const addresses = this.props.addresses
 
     return (
@@ -78,7 +100,7 @@ class CustomerAddressesTable extends Component {
       )} bsStyle="info">
         <Row>
           <Col xs={12} sm={12} md={4} lg={4}>
-            <Button bsStyle="success" onClick={this.openModal}>
+            <Button bsStyle="success" onClick={event => this.openModal(event)}>
               <FontAwesome name="plus" /> Adicionar Endereço
             </Button>
           </Col>
@@ -97,7 +119,7 @@ class CustomerAddressesTable extends Component {
               <tr key={index}>
                 <td>
                   <ButtonGroup>
-                    <Button bsStyle="info">
+                    <Button bsStyle="info" onClick={event => this.openModal(event, address._id, index)}>
                       <FontAwesome name="pencil" />
                     </Button>
                     
@@ -111,13 +133,8 @@ class CustomerAddressesTable extends Component {
             ))}
           </tbody>
         </Table>
-        
-        <AddressModal 
-          title="Formulário de Endereço" 
-          addresses={addresses}
-          isOpened={this.state.showModal} 
-          closeModal={this.closeModal}
-          customerId={this.props.customerId} />
+
+        {this.state.showModal && this.renderModal()}
       </Panel>
     )
   }
