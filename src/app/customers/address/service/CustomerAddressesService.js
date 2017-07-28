@@ -20,6 +20,16 @@ export default {
   },
 
   /**
+   * @param {String} customerId
+   * @param {String} addressId 
+   * 
+   * @return {Promise}
+   */
+  findById(customerId, addressId) {
+    return api.get(`/customers/${customerId}/addresses/${addressId}`)
+  },
+
+  /**
    * @param {String} stateInitials 
    * @param {String} query 
    * 
@@ -33,5 +43,30 @@ export default {
     }
 
     return false
+  },
+
+  /**
+   * @param {Object} data 
+   * @param {String} customerId
+   * @param {String|null|undefined} addressId 
+   * 
+   * @return {Promise}
+   */
+  save(data, customerId, addressId) {
+    if (addressId) {
+      return api.put(`/customers/${customerId}/addresses/${addressId}`, data)
+    }
+
+    return api.post(`/customers/${customerId}/addresses`, data)
+  },
+
+  /**
+   * @param {String} customerId
+   * @param {String} addressId 
+   * 
+   * @return {Promise}
+   */
+  remove(customerId, addressId) {
+    return api.delete(`/customers/${customerId}/addresses/${addressId}`)
   }
 }
