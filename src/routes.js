@@ -7,8 +7,8 @@ import { Route, Router, IndexRoute, Redirect } from 'react-router'
 
 import Dashboard from './app/components/Dashboard'
 import Home from './app/components/Home'
-import UsersScreen from './app/users/UsersScreen'
-import UserForm from './app/users/UserForm'
+import UsersScreen from './app/users/components/UsersScreen'
+import UserForm from './app/users/components/UserForm'
 
 import CustomersScreen from './app/customers/CustomersScreen'
 import CustomerForm from './app/customers/CustomerForm'

@@ -38,7 +38,7 @@ const UserTable = (props) => (
                 </Button>
               </LinkContainer>
 
-              <Button onClick={event => props.handleRemoveUser(event, index, user._id)} bsStyle="danger">
+              <Button onClick={event => props.handleRemoveUser(event, user._id)} bsStyle="danger">
                 <FontAwesome name="trash" />
               </Button>
             </ButtonGroup>

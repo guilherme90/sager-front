@@ -1,0 +1,21 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
+export const USER = {
+  PENDING: 'USER.PENDING',
+  SUCCESS: 'USER.SUCCESS',
+  FAILURE: 'USER.FAILURE'
+}
+
+export const USER_REMOVE = {
+  PENDING: 'USER_REMOVE.PENDING',
+  SUCCESS: 'USER_REMOVE.SUCCESS',
+  FAILURE: 'USER_REMOVE.FAILURE'
+}
+
+export const USER_SEARCH = {
+  PENDING: 'USER_SEARCH.PENDING',
+  SUCCESS: 'USER_SEARCH.SUCCESS',
+  FAILURE: 'USER_SEARCH.FAILURE'
+}

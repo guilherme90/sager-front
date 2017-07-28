@@ -18,8 +18,8 @@ import {
   FormControl,
   ControlLabel
 } from 'react-bootstrap'
-import AppTitle from '../components/AppTitle'
-import UserService from './service/UserService'
+import AppTitle from '../../components/AppTitle'
+import UserService from '../service/UserService'
 
 class UserForm extends Component {
   constructor(props) {

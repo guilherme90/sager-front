@@ -2,8 +2,16 @@
  * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
  */
 
+// react
 import React, { Component } from 'react'
-import update from 'react-addons-update';
+import PropTypes from 'prop-types'
+import update from 'react-addons-update'
+
+// redux
+import { connect } from  'react-redux'
+import { bindActionCreators } from 'redux'
+
+// others
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome'
@@ -22,91 +30,78 @@ import {
 } from 'react-bootstrap'
 import Loader from 'react-loader'
 import _ from 'lodash'
-import SweetAlert from '../../util/SweetAlert'
-import AppTitle from '../components/AppTitle'
+
+// app
+import SweetAlert from '../../../util/SweetAlert'
+import AppTitle from '../../components/AppTitle'
 import UserTable from './UserTable'
-import UserService from './service/UserService'
+
+/**
+ * Actions
+ */
+import { 
+  getUsers,
+  searchUsers,
+  removeUser
+} from '../user.action'
+
+const mapStateToProps = (state) => ({
+  pending: state.users.pending,
+  errorFetching: state.users.errorFetching,
+  message: state.users.message,
+  users: state.users.data
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getUsers: () => dispatch(getUsers()),
+  searchUsers: query => dispatch(searchUsers(query)),
+  removeUser: userId => dispatch(removeUser(userId))
+})
 
 class UsersScreen extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      loaded: false,
-      data: []
-    }
-  }
-
   componentDidMount() {
-    const me = this
-
-    UserService.findAllUsers()
-      .then(response => {
-        me.setState({
-          loaded: true,
-          data: response.data
-        })
-      })
-      .catch(error => {
-        me.setState({
-          loaded: true
-        })
-      })
+    this.props.getUsers()
   }
 
   /**
    * @param {SyntheticEvent} event
    * @param {String} userId
    */
-  handleRemoveUser(event, index, userId) {
+  handleRemoveUser(event, userId) {
     const me = this
     const usersScreen = me.usersScreen
 
     SweetAlert
       .confirm('Deseja remover esse registro?')
       .then(() => {
-        UserService.remove(userId)
-          .then(response => {
-            usersScreen.setState(prevState => ({
-              data: update(prevState.data, {$splice: [[index, 1]]})
-            }))
-          })
-          .catch(error => {
-            SweetAlert.error('Ocorreu um erro durante a exclusão do registro.')
-          })
+        usersScreen.props.removeUser(userId, () => {
+          alert(usersScreen.props.message)
+        })
       })
   }
 
   /**
    * @param {Object|SyntheticEvent} e
    */
-  _searchUser(e) {
-    const me = this
+  _debounceSearchUser(e) {
+    const query = this.search.value
 
-    me.setState({
-      loaded: false
-    })
-
-    UserService.searchUsers(me.search.value)
-      .then(response => {
-        me.setState({
-          loaded: true,
-          data: response.data
-        })
-      })
-      .catch(error => {
-        me.setState({
-          loaded: true
-        })
-
-        SweetAlert.error('Ocorreu um erro durante a pesquisa dos registros.')
-      })
+    if (query) {
+      return this.props.searchUsers(query)
+    }
+    
+    return this.props.getUsers()
   }
 
-  handleSearchUser = _.debounce(e => this._searchUser(e), 300)
+  handleSearchUser = _.debounce(e => this._debounceSearchUser(e), 300)
 
   render() {
-    const me = this.state
+    const { 
+      pending,
+      errorFetching, 
+      message,
+      users 
+    } = this.props
 
     return (
       <AppTitle title="Usuários">
@@ -137,10 +132,16 @@ class UsersScreen extends Component {
             </Col>
           </Row>
           
-          <Loader loaded={me.loaded}>
-            {me.data.length > 0 && <UserTable users={me.data} handleRemoveUser={this.handleRemoveUser} usersScreen={this} />}
+          <Loader loaded={!pending}>
+            {!pending && <UserTable users={users} handleRemoveUser={this.handleRemoveUser} usersScreen={this} />}
 
-            {me.data.length === 0 && (
+            {!pending && errorFetching && (
+              <Alert bsStyle="warning">
+                <FontAwesome name="info-circle" /> {message}
+              </Alert>
+            )}
+
+            {!pending && !errorFetching && users.length === 0 && (
               <Alert bsStyle="warning">
                 <FontAwesome name="info-circle" /> Não encontramos nenhum usuário cadastrado.
               </Alert>
@@ -148,8 +149,18 @@ class UsersScreen extends Component {
           </Loader>
         </Panel>
       </AppTitle>
-    );
+    )
   }
 }
 
-export default UsersScreen
+UsersScreen.PropTypes = {
+  getUsers: PropTypes.func.isRequired,
+  searchUsers: PropTypes.func.isRequired,
+  removeUser: PropTypes.func.isRequired,
+  pending: PropTypes.bool.isRequired,
+  errorFetching: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  search: PropTypes.object
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersScreen)

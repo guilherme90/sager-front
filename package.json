@@ -5,8 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.js --progress --profile --colors",
-    "dev-server": "cross-env NODE_ENV=development PORT=8003 API_URL=http\\://localhost\\:5000/api node ./server.js --exec babel-node",
-    "prod-server": "cross-env NODE_ENV=production PORT=8003 API_URL=http\\://localhost.prod node ./server.js --exec babel-node"
+    "dev-server": "cross-env NODE_ENV=development PORT=8003 API_URL=http\\://localhost\\:5000/api node ./server.js",
+    "prod-server": "cross-env NODE_ENV=production PORT=8003 API_URL=http\\://localhost.prod node ./server.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "opn": "^4.0.2",
+    "prop-types": "^15.5.10",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
@@ -43,6 +44,7 @@
     "react-loader": "^2.4.2",
     "react-router": "^3.0.3",
     "react-router-bootstrap": "^0.23.3",
+    "redux-form": "^7.0.3",
     "sweetalert2": "^6.6.5"
   },
   "devDependencies": {
@@ -63,6 +65,11 @@
     "file-loader": "^0.11.1",
     "css-loader": "^0.28.0",
     "react-hot-loader": "^3.0.0-beta.6",
+    "react-redux": "^5.0.5",
+    "redux": "^3.7.2",
+    "redux-form": "^7.0.0",
+    "redux-multi": "^0.1.12",
+    "redux-thunk": "^2.2.0",
     "style-loader": "^0.16.1",
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.10.1",

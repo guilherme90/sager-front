@@ -1,6 +1,13 @@
+/**
+ * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
+ */
+
 import React from 'react'
 import { render } from 'react-dom'
+import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
+
+import { configureStores } from './app/root.stores'
 
 import routes from './routes'
 import RootRoutes from './app/RootRoutes'
@@ -14,9 +21,12 @@ const __DEV__ = process.env.NODE_ENV === 'development';
 if (__DEV__) {
   const renderApp = (routes) => {
     render(
-      <AppContainer>
-        <RootRoutes routes={routes} />
-      </AppContainer>,
+        <AppContainer>
+          <Provider store={configureStores}>
+            <RootRoutes routes={routes} />
+          </Provider>
+        </AppContainer>
+      ,
       document.querySelector('#root')
     )
   }
@@ -35,7 +45,9 @@ if (__DEV__) {
 if (! __DEV__) {
   const renderApp = (routes) => {
     render(
-      <RootRoutes routes={routes} />,
+      <Provider store={configureStores}>
+        <RootRoutes routes={routes} />
+      </Provider>,
       document.querySelector('#root')
     )
   }
