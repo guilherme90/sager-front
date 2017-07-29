@@ -37,7 +37,7 @@ const config = {
 	entry: [],
 	output: {
 		path: resolve(__dirname, 'public'),
-		publicPath: '/',
+		publicPath: '/public/',
 		filename: 'bundle.js'
 	},
 	plugins: [
