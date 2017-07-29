@@ -79,5 +79,5 @@ if (__DEV__) {
 }
 
 if (__PRODUCTION__) {
-	module.exports = require('./webpack.production')(webpack, config)
+	module.exports = require('./webpack.production')(webpack, config, babelSettings)
 }

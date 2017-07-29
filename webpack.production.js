@@ -4,26 +4,28 @@
 
 const config = require('./webpack.config')
 
-config.entry.push('./index.js')
-config.plugins.push(
-  new webpack.LoaderOptionsPlugin({
-    minimize: true,
-    debug: false
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    beautify: false,
-    mangle: {
-      screw_ie8: true,
-      keep_fnames: true
-    },
-    compress: {
-      screw_ie8: true
-    },
-    comments: false
-  })
-)
+module.exports = (webpack, config, babelSettings) => {
+  config.entry.push('./index.js')
+  config.plugins.push(
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      beautify: false,
+      mangle: {
+        screw_ie8: true,
+        keep_fnames: true
+      },
+      compress: {
+        screw_ie8: true
+      },
+      comments: false
+    })
+  )
 
-babelSettings.plugins.push('transform-react-inline-elements')
-babelSettings.plugins.push('transform-react-constant-elements')
+  babelSettings.plugins.push('transform-react-inline-elements')
+  babelSettings.plugins.push('transform-react-constant-elements')
 
-module.exports = config
+  return config
+}
