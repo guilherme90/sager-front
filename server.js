@@ -4,12 +4,8 @@
 
 const express = require('express')
 const path = require('path')
-const opn = require('opn')
 const axios = require('axios')
-
 const webpack = require('webpack')
-const webpackDevMiddleware = require('webpack-dev-middleware')
-const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackConfig = require('./webpack.config')
 
 const compiler = webpack(webpackConfig)
@@ -17,6 +13,10 @@ const app = express()
 const __PORT__ = process.env.PORT || 8001
 
 if (process.env.NODE_ENV === 'development') {
+  const opn = require('opn')
+  const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpackHotMiddleware = require('webpack-hot-middleware')
+
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
     hot: true,
