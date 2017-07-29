@@ -4,7 +4,7 @@
   "description": "Simple project to stater React project with Webpack hot middleware, react-hot-loader and more",
   "main": "./src/index.js",
   "scripts": {
-    "postinstall": "webpack -p --config webpack.config.js --progress --profile --colors",
+    "build": "cross-env NODE_ENV=production API_URL=http\\://localhost\\:5000/api webpack -p --config webpack.config.js --progress --colors",
     "dev-server": "cross-env NODE_ENV=development PORT=8003 API_URL=http\\://localhost\\:5000/api node ./server.js",
     "start": "node ./server.js"
   },
@@ -44,8 +44,10 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
     "css-loader": "^0.28.0",
-    "style-loader": "^0.16.1",
-    "babel-loader": "^6.4.1",
+    "style-loader": "^0.16.1"
+  },
+  "devDependencies": {
+    "opn": "^4.0.2",
     "babel": "^6.23.0",
     "babel-cli": "^6.24.0",
     "babel-core": "^6.24.0",
@@ -60,16 +62,11 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "^5.0.5",
     "redux": "^3.7.2",
+    "redux-form": "^7.0.0",
     "redux-multi": "^0.1.12",
     "redux-thunk": "^2.2.0",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.18.0",
     "type-to-reducer": "^1.0.3"
-  },
-  "devDependencies": {
-    "opn": "^4.0.2"
-    
-    
-    
   }
 }
