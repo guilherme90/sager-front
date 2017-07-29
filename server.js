@@ -55,7 +55,7 @@ app.get('*', (request, response) => {
   )
 })
 
-app.listen(__PORT__, 'localhost', (err) => {
+app.listen(__PORT__, (err) => {
   if (err){
 		return console.log(err)
 	}
