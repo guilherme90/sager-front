@@ -10,7 +10,7 @@ const webpackConfig = require('./webpack.config')
 
 const compiler = webpack(webpackConfig)
 const app = express()
-const __PORT__ = process.env.PORT || 8001
+const __PORT__ = process.env.PORT
 
 if (process.env.NODE_ENV === 'development') {
   const opn = require('opn')
