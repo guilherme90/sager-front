@@ -2,7 +2,7 @@
  * @author Guilherme Nogueira <guilhermenogueira90@gmail.com>
  */
 
-const config = require('./webpack/webpack.config')
+const config = require('./webpack.config')
 
 config.entry.push('./index.js')
 config.plugins.push(
