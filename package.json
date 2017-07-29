@@ -1,16 +1,12 @@
 {
-  "name": "react-webpack-starter",
+  "name": "sager-front",
   "version": "1.0.0",
   "description": "Simple project to stater React project with Webpack hot middleware, react-hot-loader and more",
   "main": "./src/index.js",
   "scripts": {
-    "build": "export NODE_ENV=production webpack -p --config webpack.config.js --progress --profile --colors",
+    "heroku-prebuild": "export NODE_ENV=production webpack -p --config webpack.config.js --progress --profile --colors",
     "dev-server": "cross-env NODE_ENV=development PORT=8003 API_URL=http\\://localhost\\:5000/api node ./server.js",
-    "prod-server": "export NODE_ENV=production PORT=8003 API_URL=http\\://localhost.prod node ./server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/guilherme90/react-webpack-starter.git"
+    "start": "export NODE_ENV=production PORT=8003 API_URL=http\\://localhost.prod node ./server.js"
   },
   "keywords": [
     "react",
@@ -19,10 +15,6 @@
   ],
   "author": "Guilherme P. Nogueira <guilhermenogueira90@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/guilherme90/react-webpack-starter/issues"
-  },
-  "homepage": "https://github.com/guilherme90/react-webpack-starter#readme",
   "dependencies": {
     "express": "^4.15.2",
     "cross-env": "^4.0.0",
