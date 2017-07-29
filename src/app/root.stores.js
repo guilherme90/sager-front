@@ -8,6 +8,7 @@ import {
   compose
 } from 'redux'
 import thunkMiddleware from 'redux-thunk';
+import promiseMiddleware from 'redux-promise-middleware';
 import { rootReducers } from './root.reducers'
 
 const __DEV__ = process.env.NODE_ENV === 'development';
@@ -17,7 +18,9 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_
 export const configureStores = createStore(
   rootReducers,
   compose(
-    applyMiddleware(thunkMiddleware),
+    applyMiddleware(thunkMiddleware, promiseMiddleware({
+      promiseTypeSuffixes: ['PENDING', 'SUCCESS', 'FAILURE']
+    })),
     devTools
   )
 );

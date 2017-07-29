@@ -5,11 +5,9 @@
 // react
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import update from 'react-addons-update'
 
 // redux
 import { connect } from  'react-redux'
-import { bindActionCreators } from 'redux'
 
 // others
 import { Link } from 'react-router'
@@ -64,19 +62,16 @@ class UsersScreen extends Component {
   }
 
   /**
-   * @param {SyntheticEvent} event
    * @param {String} userId
    */
-  handleRemoveUser(event, userId) {
+  handleRemoveUser(userId) {
     const me = this
     const usersScreen = me.usersScreen
 
     SweetAlert
       .confirm('Deseja remover esse registro?')
       .then(() => {
-        usersScreen.props.removeUser(userId, () => {
-          alert(usersScreen.props.message)
-        })
+        usersScreen.props.removeUser(userId)
       })
   }
 
@@ -133,19 +128,33 @@ class UsersScreen extends Component {
           </Row>
           
           <Loader loaded={!pending}>
-            {!pending && <UserTable users={users} handleRemoveUser={this.handleRemoveUser} usersScreen={this} />}
+            {
+              !pending && 
+              !users.length && 
+              errorFetching && (
+              <Alert bsStyle="danger">
+                <FontAwesome name="remove" /> {message}
+              </Alert>
+            )}
 
-            {!pending && errorFetching && (
-              <Alert bsStyle="warning">
+            {
+              !pending && 
+              !users.length && 
+              !errorFetching && (
+              <Alert bsStyle="info">
                 <FontAwesome name="info-circle" /> {message}
               </Alert>
             )}
 
-            {!pending && !errorFetching && users.length === 0 && (
-              <Alert bsStyle="warning">
-                <FontAwesome name="info-circle" /> Não encontramos nenhum usuário cadastrado.
-              </Alert>
-            )}
+            {
+              !pending && 
+              !errorFetching && 
+              users.length > 0 && 
+              <UserTable 
+                users={users} 
+                handleRemoveUser={this.handleRemoveUser} 
+                usersScreen={this} />
+            }
           </Loader>
         </Panel>
       </AppTitle>
