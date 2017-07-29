@@ -4,7 +4,7 @@
   "description": "Simple project to stater React project with Webpack hot middleware, react-hot-loader and more",
   "main": "./src/index.js",
   "scripts": {
-    "build": "webpack -p --config ./webpack.config.js --progress --profile --colors",
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress --profile --colors",
     "dev-server": "cross-env NODE_ENV=development PORT=8003 API_URL=http\\://localhost\\:5000/api node ./server.js",
     "start": "node ./server.js"
   },
