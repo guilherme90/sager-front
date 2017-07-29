@@ -62,7 +62,5 @@ app.listen(__PORT__, (err) => {
 
   console.log(`Listening on port ${ __PORT__}!`)
 
-  if (process.env.NODE_ENV === 'development') {
-    opn(`http://localhost:${ __PORT__}`)
-  }
+  
 })
