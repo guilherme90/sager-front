@@ -5,7 +5,7 @@
 const config = require('./webpack.config')
 
 module.exports = (webpack, config, babelSettings) => {
-  config.entry.push('./index.js')
+  config.entry.bundle.push('./index.js')
   config.plugins.push(
     new webpack.LoaderOptionsPlugin({
       minimize: true,
@@ -13,12 +13,8 @@ module.exports = (webpack, config, babelSettings) => {
     }),
     new webpack.optimize.UglifyJsPlugin({
       beautify: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true
-      },
-      compress: {
-        screw_ie8: true
+      parallel: {
+        cache: true,
       },
       comments: false
     })

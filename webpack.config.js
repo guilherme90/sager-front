@@ -32,23 +32,50 @@ const config = {
 	cache: true,
 	watch: true,
 	resolve: {
-		extensions: ['.js', '.jsx']
+		extensions: ['.js', '.jsx'],
+		modules: [
+			__SRC__,
+			'node_modules'
+		]
 	},
-	entry: [],
+	entry: {
+		react: [
+      'react', 
+      'react-dom',
+      'react-redux',
+      'react-addons-css-transition-group',
+      'react-addons-transition-group',
+      'prop-types',
+      'react-router'
+    ],
+    vendor: [
+      'react-bootstrap',
+      'react-bootstrap-typeahead',
+      'react-router-bootstrap',
+      'react-document-title',
+      'react-fontawesome',
+      'react-loader',
+      'sweetalert2'
+    ],
+		bundle: []
+	},
 	output: {
 		path: resolve(__dirname, 'public'),
 		publicPath: '/',
-		filename: 'bundle.js'
+		filename: '[name].min.js'
 	},
 	plugins: [
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-				PORT: JSON.stringify(__PORT__),
-				API_URL: JSON.stringify(__API_URL__)
-			}
+		new webpack.optimize.CommonsChunkPlugin({
+      names: ['bundle', 'vendor', 'react'],
+			filename: '[name].min.js',
+			minChunks: Infinity,
+			allChunks: true
+    }),
+		new webpack.EnvironmentPlugin({
+			NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+			PORT: JSON.stringify(__PORT__),
+			API_URL: JSON.stringify(__API_URL__)
 		}),
-
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.NoEmitOnErrorsPlugin(),
 		new ExtractTextPlugin('styles.css')

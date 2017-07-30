@@ -11,8 +11,8 @@ import { configureStores } from './app/root.stores'
 
 import routes from './routes'
 import RootRoutes from './app/RootRoutes'
-import 'bootstrap/dist/css/bootstrap.min.css'
-//import 'bootswatch/paper/bootstrap.min.css'
+//import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootswatch/paper/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.min.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
 

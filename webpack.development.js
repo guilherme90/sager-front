@@ -15,7 +15,7 @@ module.exports = (webpack, config) => {
     open: true,
     stats: 'errors-only'
   }
-  config.entry.push(
+  config.entry.bundle.push(
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     './index.js'

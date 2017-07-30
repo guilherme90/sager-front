@@ -13,7 +13,7 @@ import {
 import FontAwesome from 'react-fontawesome'
 
 const MenuTop = () => (
-  <Navbar>
+  <Navbar inverse>
     <Navbar.Header>
       <Navbar.Brand>
         <Link to="/">
