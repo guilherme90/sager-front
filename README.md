@@ -1,8 +1,6 @@
 ### Sager - Front ###
 
-My freelancer application with React + Redux
-
-* https://sager-app.herokuapp.com for test
+My freelancer application with React + Redux. Deploy with Heroku
 
 #### Packages included ####
 - React
