@@ -1,21 +1,23 @@
 ### Sager - Front ###
 
-Simple project to stater React project with Webpack hot middleware, react-hot-loader and more!
+My freelancer application with React + Redux
+
+* https://sager-app.herokuapp.com for test
 
 #### Packages included ####
 - React
 - Bootstrap 3
 - ES6
-- Webpack 2
+- Webpack 3
 - Axios
+- Redux
 
 #### Dev Server ####
 ```sh
-$ npm run dev-server
+$ npm run dev
 ```
 
 #### Prod Server ####
 ```sh
 $ npm run build
-$ npm run prod-server
 ```
